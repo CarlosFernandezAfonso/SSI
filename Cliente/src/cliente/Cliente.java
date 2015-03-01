@@ -6,13 +6,25 @@
 
 package cliente;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.Cipher;
+import javax.crypto.CipherInputStream;
+import javax.crypto.CipherOutputStream;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  *
@@ -23,11 +35,12 @@ public class Cliente {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         try {
             Socket s = new Socket("localhost", 4567);
-            PrintWriter out = new PrintWriter(s.getOutputStream(), true);
-            BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+            
+            PrintWriter out = Stream_Ciphers.rc4_printWriter(s.getOutputStream());
+            BufferedReader in = Stream_Ciphers.rc4_bufferedReader(s.getInputStream());
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             
            
@@ -37,7 +50,7 @@ public class Cliente {
             while(true){
                 linha = br.readLine();
             
-                out.print(linha + "\n");
+                out.println(linha + "\n");
                 out.flush();
                 
                 entrada = in.readLine();
@@ -46,6 +59,9 @@ public class Cliente {
         } catch (Exception ex) {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        
     }
     
+   
 }

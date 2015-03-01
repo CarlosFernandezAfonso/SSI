@@ -62,7 +62,7 @@ public class SSI_RC4 {
                 
                 path_out = args[3];
                 
-                rc4 tempByte = new rc4(bFileIn);
+                Rc4 tempByte = new Rc4(bFileIn);
         
                 byte[] out = null;
         
@@ -91,11 +91,11 @@ public class SSI_RC4 {
         String texto_limpo = "textolimpoaqui";
         String rec , cif;
         
-        rc4 temp = new rc4(chave.getBytes());
+        Rc4 temp = new Rc4(chave.getBytes());
         
         cif = new String( temp.encrypt(texto_limpo.getBytes()) );
         
-        temp = new rc4(chave.getBytes());
+        temp = new Rc4(chave.getBytes());
         
         rec = new String( temp.decrypt(cif.getBytes()) );
         

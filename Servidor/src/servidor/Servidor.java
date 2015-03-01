@@ -29,9 +29,8 @@ public class Servidor {
             int n = 0;
             while(true){
                 Socket clientSocket = serverSocket.accept();
-                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                ThreadCliente tc = new ThreadCliente(out, in, n);
+                
+                ThreadCliente tc = new ThreadCliente(clientSocket, n);
                 n = n +1;
                 Thread t = new Thread(tc);
                 t.start();

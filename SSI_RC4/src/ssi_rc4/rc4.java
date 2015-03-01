@@ -9,12 +9,12 @@ package ssi_rc4;
  *
  * @author tiago
  */
-public class rc4 {
+public class Rc4 {
     private final byte[] S = new byte[256];
     private final byte[] T = new byte[256];
     
 
-    public rc4(final byte[] chave) {
+    public Rc4(final byte[] chave) {
 
         int tamanho_chave = chave.length;
         for (int i = 0; i < 256; i++) {
