@@ -39,18 +39,35 @@ public class Cliente {
         try {
             Socket s = new Socket("localhost", 4567);
             
-            PrintWriter out = Stream_Ciphers.rc4_printWriter(s.getOutputStream());
-            BufferedReader in = Stream_Ciphers.rc4_bufferedReader(s.getInputStream());
+            String key_path = "IV.txt";
+            byte[] iv = Files.readAllBytes(Paths.get(key_path));
+            PrintWriter out ;
+            BufferedReader in;
+            switch(args[0]){
+                case "RC4" : 
+                    out = Stream_Ciphers.rc4_printWriter(s.getOutputStream());
+                    in = Stream_Ciphers.rc4_bufferedReader(s.getInputStream());
+                    break;
+                case "AES/CBC/NoPadding":
+                    out = Stream_Ciphers.AES_CBC_NoPadding_printWriter(s.getOutputStream(),iv);
+                    in = Stream_Ciphers.AES_CBC_NoPadding_bufferedReader(s.getInputStream(), iv);
+                    break;
+                default:
+                    out =  new PrintWriter(s.getOutputStream(), true);
+                    in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+                    break;
+                    
+            }
+            
+            
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
             
-           
-    
             String entrada;
             String linha;
             while(true){
                 linha = br.readLine();
             
-                out.println(linha + "\n");
+                out.println(linha);
                 out.flush();
                 
                 entrada = in.readLine();

@@ -23,14 +23,14 @@ public class Servidor {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        
+        //args[0] é o modo de cifragem usado, exemplo "rc4"
         try{
             ServerSocket serverSocket = new ServerSocket(4567);
             int n = 0;
             while(true){
                 Socket clientSocket = serverSocket.accept();
                 
-                ThreadCliente tc = new ThreadCliente(clientSocket, n);
+                ThreadCliente tc = new ThreadCliente(clientSocket, n, args[0]);
                 n = n +1;
                 Thread t = new Thread(tc);
                 t.start();
