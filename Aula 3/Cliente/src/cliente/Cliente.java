@@ -8,6 +8,7 @@ package cliente;
 
 
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -22,6 +23,7 @@ import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.KeyGenerator;
+import javax.crypto.Mac;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -38,6 +40,19 @@ public class Cliente {
     public static void main(String[] args) throws Exception {
         try {
             Socket s = new Socket("localhost", 4567);
+            
+//            DH_KeyAgreement aux = new DH_KeyAgreement();
+//            byte dataToWrite[];
+//            try {
+//                dataToWrite = aux.DH_key_exchange(s.getOutputStream(), s.getInputStream()).getEncoded();
+//                FileOutputStream out = new FileOutputStream("AES_CBC_NoPadding_key.txt");
+//                out.write(dataToWrite);
+//                out.close();
+//            } catch (Exception ex) {
+//                
+//            }
+            
+            System.out.println("---" + args.length);
             
             String key_path = "IV.txt";
             byte[] iv = Files.readAllBytes(Paths.get(key_path));
@@ -60,25 +75,59 @@ public class Cliente {
             }
             
             
-            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-            
-            String entrada;
-            String linha;
-            while(true){
-                linha = br.readLine();
-            
-                out.println(linha);
-                out.flush();
-                
-                entrada = in.readLine();
-                System.out.print(entrada + "\n");
+            //Mac initiation
+            try{
+                String key_path1 = "AES_CBC_NoPadding_key.txt";
+                byte[] bkey = Files.readAllBytes(Paths.get(key_path1));
+
+                SecretKeySpec key = new SecretKeySpec(bkey, "HmacMD5");
+
+                Mac mac = Mac.getInstance(key.getAlgorithm());
+                mac.init(key);
+
+    //            String message = "This is a confidential message";
+    //            // get the string as UTF-8 bytes
+    //            byte[] b = message.getBytes("UTF-8");             
+    //            // create a digest from the byte array
+    //            byte[] digest = mac.doFinal(b);
+        
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+
+                String entrada;
+                String linha;
+                String incoming_mac;
+                int teste_i = 0; // System.out.println("> " + teste_i++); // teste lineasd
+                while(true){
+                    linha = br.readLine();
+                    String msg = linha;
+                    
+                    out.println(new String(mac.doFinal(msg.getBytes())) );
+                    out.flush();
+                    out.println(msg);
+                    
+                    out.flush();
+                    
+
+                    incoming_mac = in.readLine();
+                    entrada = in.readLine();
+                    
+                    Mac_Verification(entrada,mac,incoming_mac);
+                    System.out.print("Msg : " + incoming_mac + "\n");
+                }
+            } catch (Exception ex) {
+                Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (Exception ex) {
-            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch(Exception e){}
+            
         }
         
-        
-    }
     
-   
+    public static boolean Mac_Verification(String msg, Mac mac, String incoming_mac){
+        String msg_mac = new String(mac.doFinal(msg.getBytes()));
+        
+        System.out.println("("+ (incoming_mac.matches(msg_mac)) + ")" + msg );
+        return (incoming_mac.matches(msg_mac));
+    }
 }
