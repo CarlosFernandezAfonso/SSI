@@ -34,13 +34,13 @@ class ThreadCliente implements Runnable{
     private BufferedReader in;
     private Socket clientSocket;
     private int numero;
+    private String type;
    
 
-    ThreadCliente(Socket clientSocket, int num) throws Exception {
+    ThreadCliente(Socket clientSocket, int num, String type) throws Exception {
         this.clientSocket = clientSocket;
-
-        
-       this.numero = num;
+        this.type = type;  
+        this.numero = num;
     }
 
     @Override
@@ -48,7 +48,7 @@ class ThreadCliente implements Runnable{
         
         
         try {
-            Stream_setups("rc4");
+            Stream_setups(this.type);
         } catch (NoSuchPaddingException ex) {
             Logger.getLogger(ThreadCliente.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NoSuchAlgorithmException ex) {
@@ -65,7 +65,6 @@ class ThreadCliente implements Runnable{
         System.out.println("Entrou um novo cliente numero: " + numero);
         try {
             while((entrada = in.readLine()) != null){
-                System.out.println("YO");
                 out.println(numero + " - " + entrada ); 
                 out.flush();
             }
@@ -79,7 +78,7 @@ class ThreadCliente implements Runnable{
     private void Stream_setups(String type) throws NoSuchPaddingException, NoSuchAlgorithmException, IOException, InvalidKeyException {
         
         switch(type){
-            case "rc4":
+            case "RC4":
                 this.out = Stream_Ciphers.rc4_printWriter(clientSocket.getOutputStream());
                 this.in = Stream_Ciphers.rc4_bufferedReader(clientSocket.getInputStream());
                 break;
