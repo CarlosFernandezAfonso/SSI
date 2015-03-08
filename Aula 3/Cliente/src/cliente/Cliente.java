@@ -8,6 +8,8 @@ package cliente;
 
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -56,8 +58,8 @@ public class Cliente {
             
             String key_path = "IV.txt";
             byte[] iv = Files.readAllBytes(Paths.get(key_path));
-            PrintWriter out ;
-            BufferedReader in;
+            DataOutputStream out ;
+            DataInputStream in;
             switch(args[0]){
                 case "RC4" : 
                     out = Stream_Ciphers.rc4_printWriter(s.getOutputStream());
@@ -68,8 +70,8 @@ public class Cliente {
                     in = Stream_Ciphers.AES_CBC_NoPadding_bufferedReader(s.getInputStream(), iv);
                     break;
                 default:
-                    out =  new PrintWriter(s.getOutputStream(), true);
-                    in = new BufferedReader(new InputStreamReader(s.getInputStream()));
+                    out =  new DataOutputStream(s.getOutputStream());
+                    in = new DataInputStream(s.getInputStream());
                     break;
                     
             }
@@ -102,18 +104,16 @@ public class Cliente {
                     linha = br.readLine();
                     String msg = linha;
                     
-                    out.println(new String(mac.doFinal(msg.getBytes())) );
+                    out.writeUTF(msg);
+                    out.writeUTF(new String(mac.doFinal(msg.getBytes())) );
+                            System.out.println(new String(mac.doFinal(msg.getBytes())));
                     out.flush();
-                    out.println(msg);
                     
-                    out.flush();
-                    
-
-                    incoming_mac = in.readLine();
-                    entrada = in.readLine();
+                    entrada = in.readUTF();
+                    incoming_mac = in.readUTF();
                     
                     Mac_Verification(entrada,mac,incoming_mac);
-                    System.out.print("Msg : " + incoming_mac + "\n");
+                    System.out.print(entrada + "\n");
                 }
             } catch (Exception ex) {
                 Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
@@ -127,7 +127,7 @@ public class Cliente {
     public static boolean Mac_Verification(String msg, Mac mac, String incoming_mac){
         String msg_mac = new String(mac.doFinal(msg.getBytes()));
         
-        System.out.println("("+ (incoming_mac.matches(msg_mac)) + ")" + msg );
-        return (incoming_mac.matches(msg_mac));
+        System.out.println("("+ (incoming_mac.equals(msg_mac)) + ")" + msg );
+        return (incoming_mac.equals(msg_mac));
     }
 }

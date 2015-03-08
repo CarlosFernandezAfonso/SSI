@@ -60,7 +60,8 @@ class ThreadCliente implements Runnable{
         }
         
         
-
+        String key_path = "IV.txt";
+        byte[] iv = Files.readAllBytes(Paths.get(key_path));
         String entrada;
         System.out.println("Entrou um novo cliente numero: " + numero);
         try {
@@ -82,6 +83,10 @@ class ThreadCliente implements Runnable{
                 this.out = Stream_Ciphers.rc4_printWriter(clientSocket.getOutputStream());
                 this.in = Stream_Ciphers.rc4_bufferedReader(clientSocket.getInputStream());
                 break;
+            case "AES/CBC/NoPadding":
+                    out = Stream_Ciphers.AES_CBC_NoPadding_printWriter(s.getOutputStream(),iv);
+                    in = Stream_Ciphers.AES_CBC_NoPadding_bufferedReader(s.getInputStream(), iv);
+                    break;
             default:
                 this.out =  new PrintWriter(clientSocket.getOutputStream(), true);
                 this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));

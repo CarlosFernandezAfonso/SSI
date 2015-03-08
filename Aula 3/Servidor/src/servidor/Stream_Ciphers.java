@@ -6,6 +6,8 @@
 package servidor;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -35,7 +37,7 @@ import javax.crypto.spec.SecretKeySpec;
  */
 public class Stream_Ciphers {
     
-    public static BufferedReader AES_CBC_NoPadding_bufferedReader(InputStream in, byte[] IV)  throws NoSuchAlgorithmException, NoSuchPaddingException, IOException, InvalidKeyException, InvalidAlgorithmParameterException {
+    public static DataInputStream AES_CBC_NoPadding_bufferedReader(InputStream in, byte[] IV)  throws NoSuchAlgorithmException, NoSuchPaddingException, IOException, InvalidKeyException, InvalidAlgorithmParameterException {
         
 
         Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
@@ -49,11 +51,11 @@ public class Stream_Ciphers {
             
         CipherInputStream cos = new CipherInputStream(in,cipher);
 
-        return new BufferedReader(new InputStreamReader(cos));
+        return new DataInputStream(cos);
 
     }
     
-    public static PrintWriter AES_CBC_NoPadding_printWriter(OutputStream out , byte[] IV) throws NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IOException{
+    public static DataOutputStream AES_CBC_NoPadding_printWriter(OutputStream out , byte[] IV) throws NoSuchAlgorithmException, NoSuchProviderException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, IOException{
         
         Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
         
@@ -67,12 +69,12 @@ public class Stream_Ciphers {
         
         CipherOutputStream cos = new CipherOutputStream(out,cipher);
 
-        return new PrintWriter(cos, true);
+        return new DataOutputStream(cos);
     }
     
       
     
-    public static PrintWriter rc4_printWriter(OutputStream out) throws NoSuchAlgorithmException, NoSuchPaddingException, IOException, InvalidKeyException {
+    public static DataOutputStream rc4_printWriter(OutputStream out) throws NoSuchAlgorithmException, NoSuchPaddingException, IOException, InvalidKeyException {
       
 
         Cipher cipher = Cipher.getInstance( "RC4" );
@@ -89,12 +91,12 @@ public class Stream_Ciphers {
 
         CipherOutputStream cos = new CipherOutputStream(out,cipher);
 
-        return new PrintWriter(cos, true);
+        return new DataOutputStream(cos);
 
 
     }
     
-    public static BufferedReader rc4_bufferedReader(InputStream in) throws NoSuchAlgorithmException, NoSuchPaddingException, IOException, InvalidKeyException {
+    public static DataInputStream rc4_bufferedReader(InputStream in) throws NoSuchAlgorithmException, NoSuchPaddingException, IOException, InvalidKeyException {
         
 
         Cipher cipher = Cipher.getInstance( "RC4" );
@@ -111,6 +113,6 @@ public class Stream_Ciphers {
        
         CipherInputStream cos = new CipherInputStream(in,cipher);
 
-        return new BufferedReader(new InputStreamReader(cos));
+        return new DataInputStream(cos);
     }
 }

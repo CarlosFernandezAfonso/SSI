@@ -7,6 +7,8 @@
 package servidor;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -35,8 +37,8 @@ import javax.crypto.spec.SecretKeySpec;
  * @author Carlos
  */
 class ThreadCliente implements Runnable{
-    private PrintWriter out;
-    private BufferedReader in;
+    private DataOutputStream out;
+    private DataInputStream in;
     private Socket clientSocket;
     private int numero;
     private String type;
@@ -107,18 +109,17 @@ class ThreadCliente implements Runnable{
             String entrada,incoming_mac;
             System.out.println("Entrou um novo cliente numero: " + numero);
             try {
-                while((incoming_mac = in.readLine()) != null){
-                    entrada = in.readLine();
-                     
+                while((entrada = in.readUTF()) != null){
+                    incoming_mac = in.readUTF();
+                    
                     Mac_Verification(entrada,mac,incoming_mac);
                      
-                    String msg = numero + " - " + entrada;
-                     
-                    out.println( new String(mac.doFinal(msg.getBytes())) );
-                     
+                    //String msg = numero + " - " + entrada;
+                    String msg = entrada;
+                    System.out.println(msg);
+                    out.writeUTF(msg ); 
                     
-                    System.out.println("a mandar : " + msg);
-                    out.println( msg ); 
+                    out.writeUTF( new String(mac.doFinal(msg.getBytes())) );
                      
                     out.flush();
                      
@@ -148,8 +149,8 @@ class ThreadCliente implements Runnable{
                 this.in = Stream_Ciphers.AES_CBC_NoPadding_bufferedReader(clientSocket.getInputStream(), iv);
                     break;
             default:
-                this.out =  new PrintWriter(clientSocket.getOutputStream(), true);
-                this.in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                this.out =  new DataOutputStream(clientSocket.getOutputStream());
+                this.in = new DataInputStream(clientSocket.getInputStream());
                 break;
         }
  
@@ -159,8 +160,9 @@ class ThreadCliente implements Runnable{
     public boolean Mac_Verification(String msg, Mac mac, String incoming_mac){
         String msg_mac = new String(mac.doFinal(msg.getBytes()));
         
-        System.out.println("("+ (incoming_mac.matches(msg_mac)) + ")" + msg );
-        return (incoming_mac.matches(msg_mac));
+        System.out.println("Recebido->\n" + msg_mac + "\nCalculado->\n" + incoming_mac );
+        System.out.println(incoming_mac.equals(msg_mac));
+        return (incoming_mac.equals(msg_mac));
     }
     
 }
