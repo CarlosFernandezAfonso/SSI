@@ -19,7 +19,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.Cipher;
@@ -44,19 +43,18 @@ public class Cliente {
         try {
             Socket s = new Socket("localhost", 4567);
             
-            DH_KeyAgreement dh_instance = new DH_KeyAgreement();
-            ArrayList<SecretKey> secretsDH;
-            try {
-                secretsDH = dh_instance.DH_key_exchange(s.getOutputStream(), s.getInputStream());
-                FileOutputStream out = new FileOutputStream("AES_CBC_NoPadding_key.txt");
-                out.write(secretsDH.get(0).getEncoded());
-                FileOutputStream out2 = new FileOutputStream("AES_SignatureKey.txt");
-                out2.write(secretsDH.get(1).getEncoded());
-                out2.close();
-            } catch (Exception ex) {
-                
-            }
+//            DH_KeyAgreement aux = new DH_KeyAgreement();
+//            byte dataToWrite[];
+//            try {
+//                dataToWrite = aux.DH_key_exchange(s.getOutputStream(), s.getInputStream()).getEncoded();
+//                FileOutputStream out = new FileOutputStream("AES_CBC_NoPadding_key.txt");
+//                out.write(dataToWrite);
+//                out.close();
+//            } catch (Exception ex) {
+//                
+//            }
             
+            System.out.println("---" + args.length);
             
             String key_path = "IV.txt";
             byte[] iv = Files.readAllBytes(Paths.get(key_path));
@@ -81,15 +79,20 @@ public class Cliente {
             
             //Mac initiation
             try{
-                String signature_path = "AES_SignatureKey.txt";
-                byte[] sigKey = Files.readAllBytes(Paths.get(signature_path));
+                String key_path1 = "AES_CBC_NoPadding_key.txt";
+                byte[] bkey = Files.readAllBytes(Paths.get(key_path1));
 
-                SecretKeySpec signatureKey = new SecretKeySpec(sigKey, "HmacMD5");
+                SecretKeySpec key = new SecretKeySpec(bkey, "HmacMD5");
 
-                Mac mac = Mac.getInstance(signatureKey.getAlgorithm());
-                mac.init(signatureKey);
+                Mac mac = Mac.getInstance(key.getAlgorithm());
+                mac.init(key);
 
-       
+    //            String message = "This is a confidential message";
+    //            // get the string as UTF-8 bytes
+    //            byte[] b = message.getBytes("UTF-8");             
+    //            // create a digest from the byte array
+    //            byte[] digest = mac.doFinal(b);
+        
 
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 

@@ -20,7 +20,6 @@ import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.Cipher;
@@ -54,25 +53,18 @@ class ThreadCliente implements Runnable{
     @Override
     public void run() {
         
-        DH_KeyAgreement dh_instance = new DH_KeyAgreement();
-        ArrayList<SecretKey> resp;
+        DH_KeyAgreement aux = new DH_KeyAgreement();
+        byte dataToWrite[];
 
-        try {
-            resp = dh_instance.DH_key_exchange(this.clientSocket.getOutputStream(), this.clientSocket.getInputStream());
-        
-            FileOutputStream out1 = new FileOutputStream("AES_CBC_NoPadding_key.txt");
-            out1.write(resp.get(0).getEncoded());
-            out1.flush();
-            out1.close();
-            
-            //System.out.println(new String(resp.get(1).getEncoded()));
-            FileOutputStream out2 = new FileOutputStream("AES_SignatureKey.txt");
-            out2.write(resp.get(1).getEncoded());
-            out2.flush();
-            out2.close();
-        } catch (Exception ex) {
-                    Logger.getLogger(ThreadCliente.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            dataToWrite = aux.DH_key_exchange(this.clientSocket.getOutputStream(), this.clientSocket.getInputStream()).getEncoded();
+//        
+//                FileOutputStream out1 = new FileOutputStream("AES_CBC_NoPadding_key.txt");
+//                out1.write(dataToWrite);
+//                out1.close();
+//        } catch (Exception ex) {
+//                    Logger.getLogger(ThreadCliente.class.getName()).log(Level.SEVERE, null, ex);
+//        }
         
         
         try {
@@ -94,14 +86,25 @@ class ThreadCliente implements Runnable{
         
         
         //Max initiation
-        try{         
-            String signature_path = "AES_SignatureKey.txt";
-            byte[] sigKey = Files.readAllBytes(Paths.get(signature_path));
+        try{
+            String key_path = "AES_CBC_NoPadding_key.txt";
+            byte[] bkey = Files.readAllBytes(Paths.get(key_path));
 
-            SecretKeySpec signatureKey = new SecretKeySpec(sigKey, "HmacMD5");
+            SecretKeySpec key = new SecretKeySpec(bkey, "HmacMD5");
 
-            Mac mac = Mac.getInstance(signatureKey.getAlgorithm());
-            mac.init(signatureKey);
+            Mac mac = Mac.getInstance(key.getAlgorithm());
+            
+            mac.init(key);
+
+//            String message = "This is a confidential message";
+//            // get the string as UTF-8 bytes
+//            byte[] b = message.getBytes("UTF-8");             
+//            // create a digest from the byte array
+//            byte[] digest = mac.doFinal(b);
+        
+        
+        
+         int teste_i = 0; //  
 
             String entrada,incoming_mac;
             System.out.println("Entrou um novo cliente numero: " + numero);
