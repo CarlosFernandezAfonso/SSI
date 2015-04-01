@@ -5,6 +5,8 @@
  */
 package utils;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
@@ -12,6 +14,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.IvParameterSpec;
 
 /**
  *
@@ -41,12 +44,14 @@ public class Cifras {
 //        return e;
 //    }
     
-    Cifras(Key chaveSessao) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException{
-        this.out = Cipher.getInstance("AES");
-        this.out.init(Cipher.ENCRYPT_MODE,chaveSessao);
+    Cifras(Key chaveSessao , byte [] iv) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException, UnsupportedEncodingException{
+
         
-        this.in = Cipher.getInstance("AES");
-        this.in.init(Cipher.DECRYPT_MODE,chaveSessao);
+        this.out = Cipher.getInstance("AES/CBC/pkcs5padding");
+        this.out.init(Cipher.ENCRYPT_MODE,chaveSessao,new IvParameterSpec(iv));
+        
+        this.in = Cipher.getInstance("AES/CBC/pkcs5padding");
+        this.in.init(Cipher.DECRYPT_MODE,chaveSessao,new IvParameterSpec(iv));
     }
     
     public byte[] cipherAES(byte[] data) throws IllegalBlockSizeException, BadPaddingException{

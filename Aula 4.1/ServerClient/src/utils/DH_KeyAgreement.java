@@ -23,6 +23,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.crypto.BadPaddingException;
@@ -80,19 +81,25 @@ public class DH_KeyAgreement {
     //              Cliente: Ek(mac(pubCliente, pubServer)
     //Este método realiza a terceira linha
     
-    
-    
+
     //Desta maneira, para obter elegantemente a resposta proponho
     public ArrayList<Object> DH_key_exchange_Cliente(OutputStream  out_s,InputStream  in_s) throws Exception{
+        // Criar Canal de comunicacao server
+        DataOutputStream out = new DataOutputStream(out_s);
+        DataInputStream in = new DataInputStream(in_s);
+        
+        byte[] iv = new byte[16];
+        new Random().nextBytes(iv);
+        out.writeInt(iv.length);
+        out.write(iv);
+        
         // Criacao par chave publica
         System.out.println("Gen DH par chave");
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("DiffieHellman");
         DHParameterSpec param = new DHParameterSpec(P, G);
         kpg.initialize(param);
         KeyPair keyPair = kpg.genKeyPair();
-        
-        // Criar Canal de comunicacao server
-        DataOutputStream out = new DataOutputStream(out_s);
+
         
         // Enviar nossa chave publica
         byte[] myPublickeyBytes = keyPair.getPublic().getEncoded();
@@ -101,7 +108,6 @@ public class DH_KeyAgreement {
         
         
         // Receber chave publica de outros
-        DataInputStream in = new DataInputStream(in_s);
         int aux_tamanho_chave = in.readInt();
         byte[] otherPublickeyBytes = new byte[aux_tamanho_chave];
         in.readFully(otherPublickeyBytes);
@@ -125,7 +131,7 @@ public class DH_KeyAgreement {
         SecretKey chaveSessao = getSimetricKey(chaveDH);
         ArrayList<SecretKey> arraySec = splitDH(chaveSessao);
         
-        Cifras e = new Cifras(arraySec.get(0));
+        Cifras e = new Cifras(arraySec.get(0),iv);
         
 
         //Cria a parmutação pubCliente + pubServer
@@ -164,7 +170,16 @@ public class DH_KeyAgreement {
     
        
     public ArrayList<Object> DH_key_exchange_Server(OutputStream  out_s,InputStream  in_s) throws Exception{
-
+        // Criar Canal de comunicacao server
+        DataOutputStream out = new DataOutputStream(out_s);
+        DataInputStream in = new DataInputStream(in_s);
+        
+        // Receving Iv
+        int tamanho_iv = in.readInt();
+        byte[] iv = new byte[tamanho_iv];
+        in.readFully(iv);
+        
+        
         // Criacao par chave publica
         System.out.println("Gen DH par chave");
         KeyPairGenerator kpg = KeyPairGenerator.getInstance("DiffieHellman");
@@ -172,11 +187,8 @@ public class DH_KeyAgreement {
         kpg.initialize(param);
         KeyPair keyPair = kpg.genKeyPair();
         
-        // Criar Canal de comunicacao server
-        DataOutputStream out = new DataOutputStream(out_s);
-        
+
         // Receber chave publica de outros
-        DataInputStream in = new DataInputStream(in_s);
         int aux_tamanho_chave = in.readInt();
         byte[] otherPublickeyBytes = new byte[aux_tamanho_chave];
         in.readFully(otherPublickeyBytes);
@@ -195,7 +207,7 @@ public class DH_KeyAgreement {
         SecretKey chaveSessao = getSimetricKey(chaveDH);   
         
         ArrayList<SecretKey> arraySec = splitDH(chaveSessao);
-        Cifras e = new Cifras(arraySec.get(0));
+        Cifras e = new Cifras(arraySec.get(0),iv);
         
         //Cria a permutação pubCliente + pubServer
         byte[] pubClienteServer = (new String(otherPublickeyBytes) + new String(keyPair.getPublic().getEncoded())).getBytes();
