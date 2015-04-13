@@ -35,7 +35,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import utils.Cifras;
 import utils.DH_KeyAgreement;
-import static utils.File.*;
+import static utils.File_Utils.*;
 import static utils.Mac_utils.*;
 import static utils.strem_tools.readBYTES;
 

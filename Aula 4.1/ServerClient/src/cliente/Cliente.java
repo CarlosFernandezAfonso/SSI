@@ -23,7 +23,7 @@ import javax.crypto.Cipher;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import utils.Cifras;
-import static utils.File.readFile;
+import static utils.File_Utils.readFile;
 import static utils.Mac_utils.Mac_Verification;
 import static utils.Mac_utils.mac_Creation;
 import static utils.strem_tools.readBYTES;

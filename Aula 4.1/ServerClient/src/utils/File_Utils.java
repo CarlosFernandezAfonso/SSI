@@ -16,7 +16,7 @@ import javax.crypto.Mac;
  *
  * @author tiago
  */
-public class File {
+public class File_Utils {
 
     public static byte[] readFile(String stringPath) throws IOException{
         Path path = Paths.get(stringPath);
