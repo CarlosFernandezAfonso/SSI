@@ -12,7 +12,7 @@ public class CertValidator {
         
     }
     
-    public String validarCertificados(String pathCA, String pathCE) throws NoSuchAlgorithmException, CertPathValidatorException, InvalidAlgorithmParameterException, Exception{
+    public boolean validarCertificados(String pathCA, String pathCE) throws NoSuchAlgorithmException, InvalidAlgorithmParameterException, Exception{
         
         PKIXParameters params = createParams(pathCA);
         CertPath cp = null;
@@ -20,9 +20,14 @@ public class CertValidator {
 
         System.out.println("path: " + cp);
         CertPathValidator cpv = CertPathValidator.getInstance("PKIX");
-        CertPathValidatorResult cpvr = cpv.validate(cp, params);
+        try{
+            CertPathValidatorResult cpvr = cpv.validate(cp, params);
+        }
+        catch(CertPathValidatorException e){
+            return false;
+        }
         
-        return cpvr.toString();
+        return true;
     }
     
     public static void main(String[] args) throws Exception {

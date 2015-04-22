@@ -5,6 +5,12 @@
         <group>
             <file>file:/C:/Users/Carlos/Documents/GitHub/SSI/Aula%204.1/ServerClient/src/utils/CertValidator.java</file>
             <file>file:/C:/Users/Carlos/Documents/GitHub/SSI/Aula%204.1/ServerClient/src/utils/File_Utils.java</file>
+            <file>file:/C:/Users/Carlos/Documents/GitHub/SSI/Aula%204.1/ServerClient/src/utils/Cifras.java</file>
+            <file>file:/C:/Users/Carlos/Documents/GitHub/SSI/Aula%204.1/ServerClient/src/utils/DH_KeyAgreement.java</file>
+            <file>file:/C:/Users/Carlos/Documents/GitHub/SSI/Aula%204.1/ServerClient/src/cliente/Cliente.java</file>
+            <file>file:/C:/Users/Carlos/Documents/GitHub/SSI/Aula%204.1/ServerClient/src/serverclient/ServerClient.java</file>
+            <file>file:/C:/Users/Carlos/Documents/GitHub/SSI/Aula%204.1/ServerClient/src/servidor/Servidor.java</file>
+            <file>file:/C:/Users/Carlos/Documents/GitHub/SSI/Aula%204.1/ServerClient/src/servidor/ThreadCliente.java</file>
         </group>
     </open-files>
 </project-private>

@@ -30,10 +30,11 @@ public class ValidateCertPath {
     } else {
         cp = createPath(args);
     }
-    System.out.println("path: " + cp);
+    //System.out.println("path: " + cp);
     CertPathValidator cpv = CertPathValidator.getInstance("PKIX");
     CertPathValidatorResult cpvr = cpv.validate(cp, params);
     System.out.println(cpvr);
+    
     }
     public static PKIXParameters createParams(String anchorFile) throws Exception {
         TrustAnchor anchor = new TrustAnchor(getCertFromFile(anchorFile), null);
