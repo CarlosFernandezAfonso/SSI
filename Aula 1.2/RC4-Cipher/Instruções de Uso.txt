@@ -1,0 +1,9 @@
+Como usar:
+Para cifrar usar parâmetros:
+-genkey aeskey.txt
+
+Para cifrar usar parâmetros:
+-enc <chave> <fichEntrada> <fichCifrado>
+
+para descifrar usar parâmetros:
+-dec <chave> <fichCifrado> <fichSaida>
