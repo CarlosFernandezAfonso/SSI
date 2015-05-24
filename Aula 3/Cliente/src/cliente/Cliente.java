@@ -40,7 +40,9 @@ public class Cliente {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args1) throws Exception {
+        String[] args = {"RC4"};
+        
         try {
             Socket s = new Socket("localhost", 4567);
             

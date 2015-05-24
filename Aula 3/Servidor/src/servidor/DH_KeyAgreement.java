@@ -100,6 +100,7 @@ public class DH_KeyAgreement {
         
         //Recebe a segunda mensagem do cliente
         int aux_tamanho_sts = in.readInt();
+        System.out.println("--> " + aux_tamanho_sts);
         byte[] sts_Authentication = new byte[aux_tamanho_sts];
         in.readFully(sts_Authentication);
         

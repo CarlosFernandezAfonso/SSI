@@ -21,7 +21,9 @@ public class Servidor {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args1) {
+        
+        String[] args = {"RC4"};
         // TODO code application logic here
         //args[0] é o modo de cifragem usado, exemplo "rc4"
         try{
