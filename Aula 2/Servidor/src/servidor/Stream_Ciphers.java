@@ -45,7 +45,7 @@ public class Stream_Ciphers {
         
         SecretKeySpec key = new SecretKeySpec(bkey, "AES");
         
-        cipher.init(Cipher.ENCRYPT_MODE, key,new IvParameterSpec(IV));
+        cipher.init(Cipher.DECRYPT_MODE, key,new IvParameterSpec(IV));
             
         CipherInputStream cos = new CipherInputStream(in,cipher);
 
@@ -71,6 +71,10 @@ public class Stream_Ciphers {
     }
     
       
+    
+    
+    
+    
     
     public static PrintWriter rc4_printWriter(OutputStream out) throws NoSuchAlgorithmException, NoSuchPaddingException, IOException, InvalidKeyException {
       

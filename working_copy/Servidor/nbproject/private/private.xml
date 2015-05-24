@@ -3,11 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/tiago/Documents/GitHub/SSI/working_copy/Servidor/src/servidor/ThreadCliente.java</file>
-            <file>file:/C:/Users/tiago/Documents/GitHub/SSI/working_copy/Servidor/src/servidor/Servidor.java</file>
-            <file>file:/C:/Users/tiago/Documents/GitHub/SSI/working_copy/Servidor/src/servidor/Stream_Ciphers.java</file>
-            <file>file:/C:/Users/tiago/Documents/GitHub/SSI/working_copy/Servidor/src/servidor/DH_KeyAgreement.java</file>
             <file>file:/C:/Users/tiago/Documents/GitHub/SSI/working_copy/Servidor/src/servidor/Signatures.java</file>
+            <file>file:/C:/Users/tiago/Documents/GitHub/SSI/working_copy/Servidor/src/servidor/ThreadCliente.java</file>
+            <file>file:/C:/Users/tiago/Documents/GitHub/SSI/working_copy/Servidor/src/servidor/Stream_Ciphers.java</file>
+            <file>file:/C:/Users/tiago/Documents/GitHub/SSI/working_copy/Servidor/src/servidor/Servidor.java</file>
         </group>
     </open-files>
 </project-private>
